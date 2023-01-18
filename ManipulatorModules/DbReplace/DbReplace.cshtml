@@ -1,0 +1,184 @@
+﻿@inherits FortyFingers.DnnMassManipulate.Components._40FingersLib.FfRazorViewPageOfT<FortyFingers.DnnMassManipulate.ManipulatorModules.DbReplace.DbReplaceModel>
+@{
+}
+<div class="dnnForm" id="ffmmDbReplaceHelp">
+    <h2 class="dnnFormSectionHead"><a href="#">Help</a></h2>
+    <fieldset class="ddnClear">
+        <div>
+            @Html.Raw(Model.Help)
+        </div>
+    </fieldset>
+    <h2 class="dnnFormSectionHead"><a href="#">Json import/export</a></h2>
+    <fieldset class="dnnClear">
+        <div class="dnnFormItem">
+            <label class="dnnLabel">JSON text</label>
+            <textarea type="text" name="LoadJson" style="height:200px;width:500px;" class="dnnFormInput"></textarea>
+        </div>
+        <div class="dnnFormItem">
+            <ul class="dnnActions dnnClear">
+                <li><input type="button" class="dnnSecondaryAction" onclick="showJson();" value="Get Json from settings" /></li>
+                <li><input type="button" class="dnnPrimaryAction" onclick="loadJson();" value="Load Json into settings" /></li>
+            </ul>
+        </div>
+    </fieldset>
+</div>
+<div class="dnnForm ffmm-dbreplace" id="ffmmDbReplaceForm">
+    <h2 class="dnnFormSectionHead"><a href="#">Replace</a></h2>
+    <fieldset class="ddnClear">
+        <div class="dnnFormItem">
+            <label class="dnnLabel">Connection string</label>
+            <select class="dnnFormInput" name="ConnectionString">
+                @foreach (KeyValuePair<string, string> cs in Model.ConnectionStrings)
+                {
+                    <option value="@cs.Key">@cs.Key</option>
+                }
+            </select>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">SQL SELECT Statement</label>
+            <textarea name="SqlSelect" style="height:200px;width:500px;" class="dnnFormInput"></textarea>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">SQL UPDATE Statement</label>
+            <textarea name="SqlUpdate" style="height:200px;width:500px;" class="dnnFormInput"></textarea>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">Search / replace 1</label>
+            <div>
+                <textarea name="SearchText1" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+                <textarea name="ReplaceText1" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+            </div>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">Search / replace 2</label>
+            <div>
+                <textarea name="SearchText2" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+                <textarea name="ReplaceText2" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+            </div>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">Search / replace 3</label>
+            <div>
+                <textarea name="SearchText3" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+                <textarea name="ReplaceText3" style="height:50px;width:250px;" class="dnnFormInput"></textarea>
+            </div>
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">All Portals</label>
+            <input type="checkbox" name="AllPortals" class="dnnFormInput" value="true" />
+        </div>
+        <div class="dnnFormItem">
+            <label class="dnnLabel">Case Sensitive</label>
+            <input type="checkbox" name="CaseSensitive" class="dnnFormInput" value="true" />
+        </div>
+    </fieldset>
+    <ul class="dnnActions dnnClear">
+        <li><input type="button" class="dnnSecondaryAction" onclick="doDbReplace('DoListModules');" value="List Modules" /></li>
+        <li><input type="button" class="dnnSecondaryAction" onclick="doDbReplace('DoTestReplace');" value="Test Replace" /></li>
+        <li><input type="button" class="dnnSecondaryAction" onclick="doDbReplace('DoGetScript');" value="Get SQL Script" /></li>
+        <li><input type="button" class="dnnPrimaryAction" onclick="doDbReplace('DoReplace');" value="Replace" /></li>
+    </ul>
+
+    <section class="ffmm-logging">
+        <h3>Logging:</h3>
+        <div id="ffmmDbReplaceLog"></div>
+    </section>
+
+</div>
+<script>
+    $(function() {
+        $('#ffmmDbReplaceHelp').dnnPanels();
+        $('#ffmmDbReplaceForm').dnnPanels();
+    });
+    function doDbReplace(method) {
+        var service = FF.getService("40FDMM", "DbReplace", @Model.Context.Module.ModuleID, @Model.Context.Portal.ActiveTab.TabID);
+        var postData = {};
+        postData = getPostData();
+
+        FF.postFormFieldsObject(service,
+            method,
+            postData,
+            function(data) {
+                // onDone
+                $("#ffmmDbReplaceLog").html(data);
+            },
+            function(responseText) {
+                // onFail
+                $("#ffmmDbReplaceLog").append(postData.TabName + " failed with message " + responseText + "<br/>");
+            });
+    }
+    function showJson() {
+        var postData = getPostData();
+        $("#ffmmDbReplaceHelp textarea[name='LoadJson']").val(JSON.stringify(postData, null, 2));
+    }
+    function loadJson() {
+        try {
+            var data = JSON.parse($("#ffmmDbReplaceHelp textarea[name='LoadJson']").val());
+
+            if (typeof (data.ConnectionString) != "undefined") {
+                $("#ffmmDbReplaceForm select[name='ConnectionString'").val(data.ConnectionString);
+            }
+            if (typeof (data.SqlSelect) != "undefined") {
+                $("#ffmmDbReplaceForm textarea[name='SqlSelect'").val(data.SqlSelect);
+            }
+            if (typeof (data.SqlUpdate) != "undefined") {
+                $("#ffmmDbReplaceForm textarea[name='SqlUpdate'").val(data.SqlUpdate);
+            }
+            if (data.AllPortals) {
+                $("#ffmmDbReplaceForm input[name='AllPortals'").attr('checked', 'checked');
+            }
+            if (data.CaseSensitive) {
+                $("#ffmmDbReplaceForm input[name='CaseSensitive'").attr('checked', 'checked');
+            }
+
+            if (typeof (data.SearchReplace[0]) != "undefined") {
+                $("#ffmmDbReplaceForm textarea[name='SearchText1'").val(data.SearchReplace[0].Search);
+                $("#ffmmDbReplaceForm textarea[name='ReplaceText1'").val(data.SearchReplace[0].Replace);
+            }
+            if (typeof (data.SearchReplace[1]) != "undefined") {
+                $("#ffmmDbReplaceForm textarea[name='SearchText2'").val(data.SearchReplace[1].Search);
+                $("#ffmmDbReplaceForm textarea[name='ReplaceText2'").val(data.SearchReplace[1].Replace);
+            }
+            if (typeof (data.SearchReplace[2]) != "undefined") {
+                $("#ffmmDbReplaceForm textarea[name='SearchText3'").val(data.SearchReplace[2].Search);
+                $("#ffmmDbReplaceForm textarea[name='ReplaceText3'").val(data.SearchReplace[2].Replace);
+            }
+        } catch (e) {
+            $("#ffmmDbReplaceLog").html("Failed: " + JSON.stringify(e) + "<br/>");
+        }
+    }
+
+    function getPostData() {
+        var retval = {};
+        retval.ConnectionString = $("#ffmmDbReplaceForm select[name='ConnectionString'").val();
+        retval.SqlSelect = $("#ffmmDbReplaceForm textarea[name='SqlSelect'").val();
+        retval.SqlUpdate = $("#ffmmDbReplaceForm textarea[name='SqlUpdate'").val();
+        retval.AllPortals = $("#ffmmDbReplaceForm input[name='AllPortals'").val();
+        retval.CaseSensitive = $("#ffmmDbReplaceForm input[name='CaseSensitive'").val();
+
+        retval.SearchReplace = [];
+        retval.SearchReplace.push({
+            Search: $("#ffmmDbReplaceForm textarea[name='SearchText1'").val(),
+            Replace: $("#ffmmDbReplaceForm textarea[name='ReplaceText1'").val()
+        });
+        retval.SearchReplace.push({
+            Search: $("#ffmmDbReplaceForm textarea[name='SearchText2'").val(),
+            Replace: $("#ffmmDbReplaceForm textarea[name='ReplaceText2'").val()
+        } );
+        retval.SearchReplace.push({
+            Search: $("#ffmmDbReplaceForm textarea[name='SearchText3'").val(),
+            Replace: $("#ffmmDbReplaceForm textarea[name='ReplaceText3'").val()
+        } );
+
+        return retval;
+    }
+
+    $(document).ready(function () {
+
+        $("#DbReplaceModule .dnnFormSectionHead:first > a").removeClass("dnnSectionExpanded");
+        $("#DbReplaceModule .dnnFormSectionHead:first + fieldset").hide();
+
+
+
+    });
+</script>

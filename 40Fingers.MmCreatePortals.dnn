@@ -1,0 +1,42 @@
+﻿<dotnetnuke type="Package" version="5.0">
+  <packages><package name="40Fingers.MmCreatePortals" type="Library" version="00.00.00">
+  <friendlyName>40Fingers MmCreatePortals</friendlyName>
+  <description>
+	<![CDATA[
+	<b>40FINGERS DotNetNuke Module: MmCreatePortals</b>
+	<p>
+		This is a sample module, that only serves as an example to create your own component module for 40Fingers MassManipulate.
+	</p>
+  ]]>
+  </description>
+  <owner>
+	<name>40Fingers</name>
+	<organization>40Fingers</organization>
+	<url>http://www.40fingers.net</url>
+	<email>info@40fingers.net</email>
+  </owner>
+	<dependencies>
+		<dependency type="CoreVersion">08.00.00</dependency>
+	</dependencies>
+  <license src="License.htm" />
+  <releaseNotes src="releaseNotes.htm" />
+  <components>
+    <component type="Assembly">
+      <assemblies>
+        <basePath>bin</basePath>
+        <assembly>
+          <name>40Fingers.DNN.MassManipulate.MmCreatePortals.dll</name>
+        </assembly>
+      </assemblies>
+    </component>
+    <component type="ResourceFile">
+      <resourceFiles>
+        <basePath>DesktopModules/40Fingers/MmCreatePortals</basePath>
+        <resourceFile>
+          <name>Resources.zip</name>
+        </resourceFile>
+      </resourceFiles>
+    </component>
+  </components>
+</package></packages>
+</dotnetnuke>
