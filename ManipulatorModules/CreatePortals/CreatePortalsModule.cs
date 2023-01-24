@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.UI.WebControls;
 using DotNetNuke.Collections;
 using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Portals;
@@ -46,7 +47,7 @@ namespace FortyFingers.DnnMassManipulate.ManipulatorModules.CreatePortals
             model.Context = Context;
 
 
-            model.Templates = PortalController.Instance.GetAvailablePortalTemplates();
+            model.Templates = PortalController.Instance.GetAvailablePortalTemplates().Select(t => new ListItem(t.Name, t.Name)).ToList();
             
             if (RazorUtils.Render(model, "CreatePortals.cshtml", ScriptsPath, null, out retval, out msg))
             {

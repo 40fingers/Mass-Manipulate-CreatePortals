@@ -51,7 +51,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="40Fingers.DNN.Modules.DnnMassManipulate, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\40Fingers.DNN.Modules.DnnMassManipulate.0.9.3\lib\net45\40Fingers.DNN.Modules.DnnMassManipulate.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\40Fingers.DnnMassManipulate\bin\40Fingers.DNN.Modules.DnnMassManipulate.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DotNetNuke, Version=8.0.4.226, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\DotNetNuke.Core.8.0.4.226\lib\net40\DotNetNuke.dll</HintPath>
@@ -135,49 +137,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="js\40F-Common.js" />
     <Content Include="License.htm" />
     <Content Include="msbuild\custom.xml" />
     <Content Include="msbuild\version.txt" />
     <Content Include="ReleaseNotes.htm" />
-    <Content Include="Settings.ascx" />
-    <Content Include="View.ascx" />
-    <Content Include="_external\DotNetNuke.dll" />
-    <Content Include="_external\DotNetNuke.Web.Client.dll" />
-    <Content Include="_external\DotNetNuke.Web.Mvc.dll" />
-    <Content Include="_external\DotNetNuke.Web.Razor.dll" />
-    <Content Include="_external\System.Web.Razor.dll" />
-    <Content Include="_external\System.Web.WebPages.Deployment.dll" />
-    <Content Include="_external\System.Web.WebPages.dll" />
-    <Content Include="_external\System.Web.WebPages.Razor.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="40Fingers.MmCreatePortals.dnn" />
     <Content Include="msbuild\build.bat" />
     <Content Include="ManipulatorModules\CreatePortals\CreatePortals.cshtml" />
-    <Content Include="ManipulatorModules\Users\Users.cshtml" />
-    <Content Include="ManipulatorModules\RemoveSkins\RemoveSkins.cshtml" />
-    <Content Include="ManipulatorModules\RemoveRoles\RemoveRoles.cshtml" />
-    <Content Include="ManipulatorModules\GenerateTabs\GenerateTabs.cshtml" />
-    <Content Include="ManipulatorModules\GenerateRoles\GenerateRoles.cshtml" />
-    <Content Include="ManipulatorModules\DbReplace\DbReplace.cshtml" />
-    <Content Include="ManipulatorModules\CopyPagePermissions\CopyPagePermissions.cshtml" />
     <None Include="msbuild\Project.targets" />
-    <Content Include="web.config" />
     <None Include="packages.config" />
-    <Content Include="Views\_default\Index.cshtml" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Components\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ManipulatorModules\DbReplace\App_LocalResources\DbReplace.resx" />
+    <Folder Include="_external\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
