@@ -22,6 +22,7 @@ namespace FortyFingers.DnnMassManipulate.ManipulatorModules.CreatePortals
     {
         public string Template { get; set; }
         public int NumberOfPortals { get; set; }
+        public int PortalNumber { get; set; }
         public bool AsChildPortals { get; set; }
         public string PortalNamePrefix { get; set; }
         public string HttpAlias { get; set; }

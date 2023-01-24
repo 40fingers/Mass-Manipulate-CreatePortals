@@ -43,27 +43,42 @@
 
 </div>
 <script>
-    function doCreatePortals(service) {
-        var service = FF.getService("40FDMM", "CreatePortals", @Model.Context.Module.ModuleID, @Model.Context.Portal.ActiveTab.TabID);
-        var postData = {};
+    function doCreatePortals() {
+        let service = FF.getService("40FDMM", "CreatePortals", @Model.Context.Module.ModuleID, @Model.Context.Portal.ActiveTab.TabID);
+        let postData = {};
+        let numberOfPortals = $("#ffmmCreatePortalsForm input[name=numberOfPortals]").val();
         postData.Template = $("#ffmmCreatePortalsForm select[name=PortalTemplate]").val();
-        postData.NumberOfPortals = $("#ffmmCreatePortalsForm input[name=numberOfPortals]").val();
+        postData.NumberOfPortals = numberOfPortals;
         postData.AsChildPortals = $("#ffmmCreatePortalsForm input[name=asChildPortals]").is(":checked");
         postData.PortalNamePrefix = $("#ffmmCreatePortalsForm input[name=portalNamePrefix]").val();
         postData.HttpAlias = $("#ffmmCreatePortalsForm input[name=portalAlias]").val();
 
         $("#ffmmCreatePortalsLog").append(`Posting: ${JSON.stringify(postData)}<br/>`);
 
+        postData.PortalNumber = 1;
+        doCreatePortalOneByOne(service, postData, numberOfPortals);
+    }
+
+    function doCreatePortalOneByOne(service, postData) {
+        $("#ffmmCreatePortalsLog").append(`Creating Portal ${postData.PortalNumber}<br/>`);
         FF.postFormFieldsObject(service,
             "Do",
             postData,
             function (responseText) {
                 // onDone
                 $("#ffmmCreatePortalsLog").append(responseText + "<br/>");
+                CreateNextPortal(service, postData);
             },
-            function(responseText) {
+            function (responseText) {
                 // onFail
                 $("#ffmmCreatePortalsLog").append("CreatePortals failed with message " + responseText + "<br/>");
+                CreateNextPortal(service, postData);
             });
+    }
+    function CreateNextPortal(service, postData) {
+        postData.PortalNumber = postData.PortalNumber + 1;
+        if (postData.PortalNumber <= postData.NumberOfPortals) {
+            doCreatePortalOneByOne(service, postData);
+        }
     }
 </script>
